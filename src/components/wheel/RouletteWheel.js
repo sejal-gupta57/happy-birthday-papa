@@ -1,149 +1,122 @@
-import { Grid, TextField, Button } from "@mui/material";
-import React, { useState, useEffect } from "react";
-import { Wheel } from "react-custom-roulette";
-import axios from "axios";
-import "./Wheel.scss";
+import RouletteWheel from "./wheel/RouletteWheel";
+import { useRef, useState } from 'react';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box } from "@mui/material";
+import "./wheel/Wheel.scss";
+import InviteVideo from "../assets/Invite_video.mp4";
 
-const RouletteWheel = ({ hostName, result, setResult, mustSpin, setMustSpin, name, setName }) => {
-  const [error, setError] = useState(false);
-  const [prizeNumber, setPrizeNumber] = useState(0);
-  const [usedColors, setUsedColors] = useState([]);
-  const data = [
-    { option: "Black" },
-    { option: "Pink" },
-    { option: "Brown" },
-    { option: "Green" },
-    { option: "Red" },
-    { option: "Lavender" },
-  ];
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialogContent-root': {
+        padding: theme.spacing(2),
+    },
+    '& .MuiDialogActions-root': {
+        padding: theme.spacing(1),
+    },
+}));
+    
+const HomePage=({NodeUrl})=>{
+    const [open, setOpen] = useState(false);
+    const [result, setResult] = useState(null);
+    const [mustSpin, setMustSpin] = useState(false);
+    const [name, setName] = useState("");
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+    const handleClose = () => {
+      setOpen(false);
+    };
+    const videoRef = useRef(null);
 
-  const bgColors = ["#000", "#ffd2d2", "#670000", "#93c47d", "#cc0000", "#e5c2d1"];
-  const textColors = ["#ffffff", "#000", "#ffffff", "#000", "#ffffff", "#000"];
-
-  useEffect(() => {
-    fetchUsedColors();
-  }, []);
-
-  const fetchUsedColors = async () => {
-    try {
-      const response = await axios.get(hostName + "get-data");
-      setUsedColors(response.data.map((entry) => entry.color));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const getUniqueColorIndex = () => {
-    const availableColors = data.filter((segment) => !usedColors.includes(segment.option));
-    if (availableColors.length === 0) {
-      alert("All colors have been used! Contact Admin");
-      return -1;
-    }
-    const newPrize = availableColors[Math.floor(Math.random() * availableColors.length)];
-    return data.findIndex((segment) => segment.option === newPrize.option);
-  };
-
-  const handleSpinClick = async () => {
-    if (!name.trim()) {
-      setError(true);
-      return;
-    }
-
-    setError(false);
-    const newPrizeNumber = getUniqueColorIndex();
-    if(newPrizeNumber!=-1){
-      setPrizeNumber(newPrizeNumber);
-      setMustSpin(true);
-    }
-  };
-
-  const onStopSpinning = () => {
-    setMustSpin(false);
-    const colorWon = data[prizeNumber].option;
-    setResult(colorWon);
-
-    // Send data to the backend after the spin stops
-    saveResult(name, colorWon);
-  };
-
-  const saveResult = async (userName, colorWon) => {
-    try {
-      await axios.post(hostName + "save-data", { name: userName, color: colorWon });
-      fetchUsedColors();
-    } catch (error) {
-      console.error("Error saving data:", error);
-    }
-  };
-  const getColorForOption = (option) => {
-    const index = data.findIndex(item => item.option === option);
-    return index !== -1 ? bgColors[index] : "transparent"; // Default color if not found
-  };
-  return (
-    <>
-    { (mustSpin || !result) &&
-      <div className="roulette-wheel" container>
-        <div>
-          <span className="floating-rainbow-text">
-            <b>Note:</b> Please enter both your name and your partner's name in the box below before spinning the wheel.
-          </span>
+    const unmuteVideo = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = false;
+            videoRef.current.play(); // Ensure it resumes playing after unmuting
+        }
+    };
+    return(
+        <div container className="HomePage" 
+         onClick={unmuteVideo}
+        > 
+            <Button variant="outlined" onClick={handleClickOpen} className="glowing-button">
+                <span className="button-span">
+                    <div>Spin the wheel to find out which color the couples will be wearing!</div>
+                    <div>(Click Here)</div>
+                </span>
+            </Button>
+            <span className="homepage-title">
+                <div>
+                    Join us in celebrating 50 years of love, laughter, and unforgettable memories as we honor the man who makes life brighter 
+                </div>
+                <div style={{textAlign: 'center', fontSize: '25px', fontWeight: 'bold'}}>
+                    Dad
+                </div>
+            </span>
+            <BootstrapDialog
+                onClose={handleClose}
+                aria-labelledby="customized-dialog-title"
+                open={open}
+            >
+                <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                    Spin the Wheel
+                </DialogTitle>
+                <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={(theme) => ({
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: theme.palette.grey[500],
+                })}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <DialogContent dividers>
+                    <RouletteWheel 
+                        NodeUrl={NodeUrl} 
+                        result={result} 
+                        setResult={setResult} 
+                        mustSpin={mustSpin} 
+                        setMustSpin={setMustSpin}
+                        name={name}
+                        setName={setName}
+                    />
+                </DialogContent>
+                {!mustSpin && result &&
+                    (<DialogActions>
+                        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                            <Button 
+                                autoFocus 
+                                onClick={handleClose} 
+                                variant="contained"
+                                color="primary"
+                            >
+                                Super Excited
+                            </Button>
+                        </Box>
+                    </DialogActions>)
+                }
+            </BootstrapDialog>
+            <video 
+                src={InviteVideo} 
+                autoPlay 
+                loop 
+                muted
+                playsInline 
+                ref={videoRef}
+                onClick={unmuteVideo}
+                style={{ width: "100%", height: "auto", maxWidth: '600px' }}
+            >
+                Your browser does not support the video tag.
+            </video>
         </div>
-        <div>
-          <TextField
-            required
-            id="name-input"
-            label="Name"
-            name="name"
-            placeholder="Enter your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            error={error}
-            helperText={error ? "Please enter your name" : ""}
-            sx={{ width: "70vw", maxWidth: "400px" }}
-          />
-        </div>
-        <div>
-          <Wheel
-            mustStartSpinning={mustSpin}
-            prizeNumber={prizeNumber}
-            data={data}
-            backgroundColors={bgColors}
-            onStopSpinning={onStopSpinning} // Call this when the wheel stops spinning
-            textColors={textColors}
-          />
-        </div>
-        <div>
-          <Button
-            onClick={handleSpinClick}
-            variant="contained"
-            color="primary"
-            sx={{ width: "70vw", padding: "15px", maxWidth: "400px" }}
-          >
-            Spin the Wheel & Submit your Name
-          </Button>
-        </div>
-      </div>
-      }
-      {!mustSpin && result && (
-        <div className="roulette-wheel" container>
-          <h1>Congratulations,</h1>
-          <h2>{name}</h2>
-          <h3 className="mt-4 text-xl font-bold">🎉You have got: {result} Color🎉</h3>
-          <div
-            className="color-box"
-            style={{
-              backgroundColor: getColorForOption(result),
-            }}
-          ></div>
-          <ul>
-            <li>Each couple should fill out the form only once.</li>
-            <li>Please ensure that both partners wear Western attire in the assigned color.</li>
-            <li>A special prize will be awarded to the best-dressed couple, chosen by the birthday boy! 🎉</li>
-          </ul>
-        </div>
-      )}
-    </>
-  );
-  
-};
-
-export default RouletteWheel;
+    )
+}
+export default HomePage;
