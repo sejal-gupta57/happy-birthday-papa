@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'r
 import HomePage from './components/HomePage';
 
 function App() {
-  const hostName = "http://10.223.134.124:9090:9090/";
+  const hostName = "http://10.223.134.124:9090/";
   debugger;
   return (
     <div className="App">
