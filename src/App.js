@@ -1,19 +1,18 @@
-import logo from './logo.svg';
 import './App.css';
-import RouletteWheel from './components/wheel/RouletteWheel';
 import GetData from './components/getData';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import HomePage from './components/HomePage';
 
 function App() {
-  const hostName = "http://10.223.42.163:9090/";
-  debugger;
+  // console.log('All env variables:', process.env);
+  // console.log('Specific variable:', process.env.REACT_APP_NODE_URL);
+    const NodeUrl = process.env.REACT_APP_NODE_URL;
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage  hostName={hostName}/>}/>
-          <Route path="/abcfdfedewsfetdfgjfergitrdfgvr" element={<GetData hostName={hostName}/>} />
+          <Route path="/" element={<HomePage  NodeUrl={NodeUrl}/>}/>
+          <Route path="/abcfdfedewsfetdfgjfergitrdfgvr" element={<GetData NodeUrl={NodeUrl}/>} />
         </Routes>
       </Router>
     
