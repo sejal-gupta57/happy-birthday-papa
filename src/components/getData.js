@@ -7,7 +7,7 @@ const GetData = ({ NodeUrl }) => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const fetchData = async () => {
         try {
