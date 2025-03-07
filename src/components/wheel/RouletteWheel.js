@@ -11,14 +11,13 @@ const RouletteWheel = ({ NodeUrl, result, setResult, mustSpin, setMustSpin, name
   const data = [
     { option: "Black" },
     { option: "Pink" },
-    { option: "Brown" },
-    { option: "Green" },
+    { option: "Blue" },
     { option: "Red" },
     { option: "Lavender" },
   ];
 
-  const bgColors = ["#000", "#ffd2d2", "#670000", "#93c47d", "#cc0000", "#e5c2d1"];
-  const textColors = ["#ffffff", "#000", "#ffffff", "#000", "#ffffff", "#000"];
+  const bgColors = ["#000", "#dc4baf", "#499eed", "#cc0000", "#e5c2d1"];
+  const textColors = ["#ffffff", "#000", "#ffffff", "#ffffff", "#000"];
 
   
   const fetchUsedColors = async () => {
