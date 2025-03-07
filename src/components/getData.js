@@ -12,9 +12,10 @@ const GetData = ({ NodeUrl }) => {
             console.error("Error fetching data:", error);
         }
     };
-    useEffect(() => {
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     fetchData();
+    // }, []);
+    fetchData();
 
     const deleteEntry = async (id) => {
         try {
