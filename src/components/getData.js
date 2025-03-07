@@ -64,14 +64,14 @@ const GetData = ({ NodeUrl }) => {
                 <TableBody>
                     {data.length > 0 ? (
                         data.map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow key={row._id}>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.color}</TableCell>
                                 <TableCell>
                                     <Button 
                                         variant="contained" 
                                         color="secondary" 
-                                        onClick={() => deleteEntry(row.id)}
+                                        onClick={() => deleteEntry(row._id)}
                                     >
                                         Delete
                                     </Button>
