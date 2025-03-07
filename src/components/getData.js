@@ -14,7 +14,7 @@ const GetData = ({ NodeUrl }) => {
     };
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+    }, []);
 
     const deleteEntry = async (id) => {
         try {
