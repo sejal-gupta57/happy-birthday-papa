@@ -1,4 +1,4 @@
-import { Grid, TextField, Button } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { Wheel } from "react-custom-roulette";
 import axios from "axios";
@@ -22,7 +22,8 @@ const RouletteWheel = ({ NodeUrl, result, setResult, mustSpin, setMustSpin, name
 
   useEffect(() => {
     fetchUsedColors();
-  }, []);
+}, [fetchUsedColors]); 
+
 
   const fetchUsedColors = async () => {
     try {
@@ -51,7 +52,7 @@ const RouletteWheel = ({ NodeUrl, result, setResult, mustSpin, setMustSpin, name
 
     setError(false);
     const newPrizeNumber = getUniqueColorIndex();
-    if(newPrizeNumber!=-1){
+    if(newPrizeNumber!==-1){
       setPrizeNumber(newPrizeNumber);
       setMustSpin(true);
     }
