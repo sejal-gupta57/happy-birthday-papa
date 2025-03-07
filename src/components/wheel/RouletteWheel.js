@@ -31,7 +31,7 @@ const RouletteWheel = ({ NodeUrl, result, setResult, mustSpin, setMustSpin, name
 
   useEffect(() => {
     fetchUsedColors();
-}, [fetchUsedColors]); 
+}, []); 
 
 
   const getUniqueColorIndex = () => {
